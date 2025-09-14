@@ -1,30 +1,18 @@
 package com.example.lab_week_03
 
-import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import android.os.Bundle
 
-// Pindahkan CoffeeListener ke level atas (di luar MainActivity)
-interface CoffeeListener {
-    fun onSelected(id: Int)
-}
-
-class MainActivity : AppCompatActivity(), CoffeeListener {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        // Tampilkan ListFragment saat pertama kali
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, ListFragment())
+                .commit()
         }
-    }
-
-    override fun onSelected(id: Int) {
-        val detailFragment = supportFragmentManager
-            .findFragmentById(R.id.fragment_detail) as DetailFragment
-        detailFragment.setCoffeeData(id)
     }
 }

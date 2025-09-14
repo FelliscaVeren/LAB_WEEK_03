@@ -1,46 +1,52 @@
 package com.example.lab_week_03
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.ListView
 import androidx.fragment.app.Fragment
 
-class ListFragment : Fragment(), View.OnClickListener {
+class ListFragment : Fragment() {
 
-    private lateinit var coffeeListener: CoffeeListener
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is CoffeeListener) {
-            coffeeListener = context
-        } else {
-            throw RuntimeException("Must implement CoffeeListener")
-        }
-    }
+    private val coffeeList = listOf(
+        "AFFOGATO" to "Espresso poured on a vanilla ice cream. Served in a cappuccino cup.",
+        "AMERICANO" to "Espresso with added hot water. Served in a regular coffee cup.",
+        "CAFFE LATTE" to "Espresso with steamed milk and foam. Served in a tall glass."
+    )
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        val listView = view.findViewById<ListView>(R.id.coffee_list_view)
+        val titles = coffeeList.map { it.first }
 
-        val coffeeList = listOf<View>(
-            view.findViewById(R.id.affogato),
-            view.findViewById(R.id.americano),
-            view.findViewById(R.id.latte)
+        listView.adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_list_item_1,
+            titles
         )
 
-        coffeeList.forEach { it.setOnClickListener(this) }
-    }
+        listView.setOnItemClickListener { _, _, position, _ ->
+            val (title, desc) = coffeeList[position]
 
-    override fun onClick(v: View?) {
-        v?.let { coffeeListener.onSelected(it.id) }
+            val detailFragment = DetailFragment().apply {
+                arguments = Bundle().apply {
+                    putString("title", title)
+                    putString("desc", desc)
+                }
+            }
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, detailFragment)
+                .addToBackStack(null)
+                .commit()
+        }
     }
 }
