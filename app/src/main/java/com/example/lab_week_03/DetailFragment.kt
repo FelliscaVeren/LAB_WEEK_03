@@ -13,14 +13,14 @@ class DetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_detail, container, false)
-    }
+        val root = inflater.inflate(R.layout.fragment_detail, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val title = arguments?.getString("title")
-        val desc = arguments?.getString("desc")
+        val name = arguments?.getString("name")
+        val description = arguments?.getString("description")
 
-        view.findViewById<TextView>(R.id.title_text).text = title
-        view.findViewById<TextView>(R.id.desc_text).text = desc
+        root.findViewById<TextView>(R.id.textName).text = name
+        root.findViewById<TextView>(R.id.textDescription).text = description
+
+        return root
     }
 }

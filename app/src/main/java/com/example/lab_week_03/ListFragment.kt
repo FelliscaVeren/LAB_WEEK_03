@@ -1,5 +1,6 @@
 package com.example.lab_week_03
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,43 +11,46 @@ import androidx.fragment.app.Fragment
 
 class ListFragment : Fragment() {
 
-    private val coffeeList = listOf(
+    interface OnCoffeeSelectedListener {
+        fun onCoffeeSelected(name: String, description: String)
+    }
+
+    private lateinit var listener: OnCoffeeSelectedListener
+
+    private val coffees = listOf(
         "AFFOGATO" to "Espresso poured on a vanilla ice cream. Served in a cappuccino cup.",
-        "AMERICANO" to "Espresso with added hot water. Served in a regular coffee cup.",
-        "CAFFE LATTE" to "Espresso with steamed milk and foam. Served in a tall glass."
+        "AMERICANO" to "Espresso with added hot water.",
+        "CAFE LATTE" to "Espresso with steamed milk and a small amount of milk foam."
     )
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnCoffeeSelectedListener) {
+            listener = context
+        } else {
+            throw RuntimeException("$context must implement OnCoffeeSelectedListener")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_list, container, false)
-    }
+        val root = inflater.inflate(R.layout.fragment_list, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val listView = view.findViewById<ListView>(R.id.coffee_list_view)
-        val titles = coffeeList.map { it.first }
-
-        listView.adapter = ArrayAdapter(
+        val listView = root.findViewById<ListView>(R.id.listView)
+        val adapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_list_item_1,
-            titles
+            coffees.map { it.first }
         )
+        listView.adapter = adapter
 
         listView.setOnItemClickListener { _, _, position, _ ->
-            val (title, desc) = coffeeList[position]
-
-            val detailFragment = DetailFragment().apply {
-                arguments = Bundle().apply {
-                    putString("title", title)
-                    putString("desc", desc)
-                }
-            }
-
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, detailFragment)
-                .addToBackStack(null)
-                .commit()
+            val coffee = coffees[position]
+            listener.onCoffeeSelected(coffee.first, coffee.second)
         }
+
+        return root
     }
 }
