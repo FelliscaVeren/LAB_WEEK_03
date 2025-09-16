@@ -1,27 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
-    android:padding="24dp"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp">
 
-    <!-- Nama kopi di tengah -->
     <TextView
-        android:id="@+id/textName"
+        android:id="@+id/textViewCoffeeName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="26sp"
+        android:textSize="34sp"
         android:textStyle="bold"
-        android:layout_marginBottom="12dp" />
+        tools:text="Coffee Name" />
 
-    <!-- Penjelasan -->
     <TextView
-        android:id="@+id/textDescription"
-        android:layout_width="match_parent"
+        android:id="@+id/textViewCoffeeDescription"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:textSize="18sp"
         android:gravity="center"
-        android:lineSpacingExtra="4dp" />
+        android:paddingHorizontal="16dp"
+        tools:text="A delicious description of the coffee and how it's made will appear here." />
 
+    <Button
+        android:id="@+id/buttonBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Back"/>
 </LinearLayout>
+    
